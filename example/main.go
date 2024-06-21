@@ -17,14 +17,14 @@ var config = CmdConfig{}
 
 func main() {
 	app := &cli.App{
-		Name:  "Example cli apii",
+		Name:  "Example cli app",
 		Usage: "Showing off log format options",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "log-format",
 				EnvVars:     []string{"LOG_FORMAT"},
-				Value:       "text",
-				Usage:       "Either: text or json",
+				Value:       "auto",
+				Usage:       "Options: auto, text or json",
 				Destination: &config.logFormat,
 			},
 			&cli.StringFlag{

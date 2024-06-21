@@ -1,6 +1,7 @@
 package gocliawesomeness
 
 import (
+	"golang.org/x/term"
 	"log/slog"
 	"os"
 )
@@ -10,13 +11,21 @@ type LogFormat string
 const (
 	FormatText LogFormat = "text"
 	FormatJson LogFormat = "json"
+	FormatAuto LogFormat = "auto"
 )
 
 func NewAwesomeLogger(options *Options) *slog.Logger {
-	if options.Format == FormatText {
+	switch options.Format {
+	case FormatText:
 		return NewAwesomeTextLogger(options)
-	} else {
+	case FormatJson:
 		return NewAwesomeJsonLogger(options)
+	default:
+		if term.IsTerminal(int(os.Stdout.Fd())) {
+			return NewAwesomeTextLogger(options)
+		} else {
+			return NewAwesomeJsonLogger(options)
+		}
 	}
 }
 
@@ -58,7 +67,9 @@ func Format(format string) LogFormat {
 	switch format {
 	case string(FormatText):
 		return FormatText
-	default:
+	case string(FormatJson):
 		return FormatJson
+	default:
+		return FormatAuto
 	}
 }
